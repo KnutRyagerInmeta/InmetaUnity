@@ -2,17 +2,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class C4 : MonoBehaviour
-{
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+public class C4 : Bullet {
 
-    // Update is called once per frame
-    void Update()
+
+	public void Explode()
     {
-        
+        explosive.Explode();
     }
 }
