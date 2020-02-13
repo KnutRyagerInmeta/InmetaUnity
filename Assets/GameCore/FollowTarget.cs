@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class FollowTarget : MonoBehaviour
 {
-    public GameObject target;
+    public Transform target;
     public float maxOffsetX = 1;
     public float maxOffsetY = 2;
     // Start is called before the first frame update
@@ -17,8 +17,8 @@ public class FollowTarget : MonoBehaviour
     void Update()
     {
         transform.position = new Vector3(
-            GetCoordinate(transform.position.x, target.transform.position.x, maxOffsetX),
-            GetCoordinate(transform.position.y, target.transform.position.y, maxOffsetY),
+            GetCoordinate(transform.position.x, target.position.x, maxOffsetX),
+            GetCoordinate(transform.position.y, target.position.y, maxOffsetY),
             transform.position.z);
     }
 

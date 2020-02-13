@@ -6,15 +6,18 @@ public class Ball : MonoBehaviour
 {
     Rigidbody body;
     Health health;
-    public float acceleration = 1;
+    public float airAcceleration = 1;
+    public float brakeStrength = 2;
     public float angularAcceleration = 100;
-    public float jumpAcceleration = 10;
+    public float jumpSpeed = 10;
     public float bouncity = 0.5f;
 
     private int currentFrame = 0;
     private int lastFrameCollided = -999;
     private Vector3 previousVelocity = default;
     private Vector3 startPosition = default;
+    private float jumpTimer = 0;
+    private float jumpTime = 0.3f;
 
     // Start is called before the first frame update
     void Start()
@@ -29,24 +32,35 @@ public class Ball : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        // Move left
-        if (Input.GetKey(KeyCode.A))
+        var moveDirection = 0;
+
+        if (Input.GetKey(KeyCode.A)) moveDirection -= 1; // Move left
+        if (Input.GetKey(KeyCode.D)) moveDirection += 1; // Move right
+
+        if (moveDirection != 0)
         {
-            if (TouchesGround()) body.AddTorque(new Vector3(0, 0, angularAcceleration));
-            else body.AddForce(new Vector3(-acceleration, 0, 0));
+            var horizontalDirection = Mathf.Sign(body.velocity.x);
+            var accelerationGroundOrAir = TouchesGround() ? -angularAcceleration : airAcceleration;
+            var accelerationWithDirection = moveDirection * accelerationGroundOrAir;
+            var accelerationWithBraking = horizontalDirection == moveDirection ? accelerationWithDirection : accelerationWithDirection * brakeStrength;
+            if (TouchesGround()) body.AddTorque(new Vector3(0, 0, accelerationWithBraking), ForceMode.Acceleration);
+            else body.AddForce(Vector3.right * accelerationWithBraking, ForceMode.Acceleration);
         }
-        // Move right
-        if (Input.GetKey(KeyCode.D))
+        // Brake only
+        if (Input.GetKey(KeyCode.S))
         {
-            if (TouchesGround()) body.AddTorque(new Vector3(0, 0, -angularAcceleration));
-            else body.AddForce(new Vector3(acceleration, 0, 0));
+            if (TouchesGround()) body.AddForce(Vector3.right * body.velocity.x * -(Mathf.Max(body.velocity.magnitude * Time.deltaTime, airAcceleration * brakeStrength)), ForceMode.VelocityChange);
+            else body.AddForce(Vector3.right * airAcceleration, ForceMode.Acceleration);
         }
         // Jump
-        if (Input.GetKeyDown(KeyCode.Space) && TouchesGround())
+        jumpTimer += Time.deltaTime;
+        if (Input.GetKey(KeyCode.Space) && TouchesGround() && jumpTimer >= jumpTime)
         {
-            body.AddForce(new Vector3(0, jumpAcceleration, 0) / Time.deltaTime);
+            var verticalDirection = Mathf.Sign(body.velocity.y);
+            var currentUpSpeed = verticalDirection == 1 ? body.velocity.y : -body.velocity.y * bouncity;
+            if (currentUpSpeed < jumpSpeed) body.AddForce(Vector3.up * ((jumpSpeed - currentUpSpeed)), ForceMode.Impulse);
+            jumpTimer = 0;
         }
-
 
         if (Input.GetKeyDown(KeyCode.R)) Reset();
     }

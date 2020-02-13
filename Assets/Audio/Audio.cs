@@ -14,19 +14,14 @@ public class Audio : MonoBehaviour
         audioSource = GetComponent<AudioSource>();
     }
 
-    public void Play()
+    public void Play(AudioClip[] sounds = null)
     {
-        if (sounds.Length > 0)
+        if(sounds != null) this.sounds = sounds;
+        if (this.sounds.Length > 0)
         {
             SelectSound();
             audioSource.Play();
         }
-    }
-
-    public void Play(AudioClip[] sounds)
-    {
-        this.sounds = sounds;
-        Play();
     }
 
     private void SelectSound()

@@ -24,43 +24,16 @@ public class Explosive : MonoBehaviour
 
     public void Explode()
     {
-
         Vector3 explosionPos = transform.position;
         Collider[] colliders = Physics.OverlapSphere(explosionPos, radius);
         //Debug.Log("EXPLODE0: " + explosionPos + "," + radius + ": " + colliders.Length);
-        if (particleSystem != null)
-        {
-            particleSystem.gameObject.SetActive(true);
-            particleSystem.Play();
-            Destroy(gameObject, particleSystem.main.duration);
-            var body = gameObject.GetComponent<Rigidbody>();
-            if (body != null)
-            {
-                body.isKinematic = true;
-            }
-            if (renderer == null)
-            {
-                renderer = gameObject.GetComponentInChildren<Renderer>();
-            }
-            if (renderer != null)
-            {
-                renderer.enabled = false;
-            }
-        }
-        else
-        {
-            Destroy(gameObject, 0);
-        }
         foreach (Collider hit in colliders)
         {
             Rigidbody rb = hit.GetComponentInChildren<Rigidbody>();
-            if (rb == null)
-            {
-                rb = hit.GetComponentInParent<Rigidbody>();
-            }
+            if (rb == null) rb = hit.GetComponentInParent<Rigidbody>();
             var dist = Vector3.Distance(hit.ClosestPoint(transform.position), transform.position);
             var damage = power * 0.1f / dist;
-            //Debug.Log("EXPLODE: " + rb.name + "," + power);
+            // Debug.Log("EXPLODE: " + rb.name + "," + power);
             if (rb != null)
             {
                 rb.AddExplosionForce(power, explosionPos, radius, 0F);
@@ -71,20 +44,25 @@ public class Explosive : MonoBehaviour
                 }
             }
             var block = hit.GetComponent<Block>();
-            if (block != null)
-            {
-                block.ExplodeOn(damage);
-            }
+            if (block != null) block.ExplodeOn(damage);
             var weakPoint = hit.GetComponent<WeakPoint>();
-            if(weakPoint != null)
-            {
-                weakPoint.Trigger();
-            }
-            //Debug.Log("HIT: " + hit.gameObject.name + ", "+ (weakPoint != null));
+            if (weakPoint != null) weakPoint.Trigger();
+            // Debug.Log("HIT: " + hit.gameObject.name + ", "+ (weakPoint != null));
         }
-        if (audio != null)
+        if (particleSystem != null)
         {
-            audio.Play();
+            particleSystem.gameObject.SetActive(true);
+            particleSystem.Play();
+            Destroy(gameObject, particleSystem.main.duration);
+            var body = gameObject.GetComponent<Rigidbody>();
+            if (body != null) body.isKinematic = true;
+            if (renderer == null) renderer = gameObject.GetComponentInChildren<Renderer>();
+            if (renderer != null) renderer.enabled = false;
         }
+        else
+        {
+            Destroy(gameObject, 0);
+        }
+        if (audio != null) audio.Play();
     }
 }

@@ -59,7 +59,7 @@ public class Bullet : MonoBehaviour
         }
     }
 
-    internal void Shoot(float force)
+    public void Shoot(float force)
     {
         var f = transform.forward.normalized * force;
         body.AddForce(f, ForceMode.Impulse);

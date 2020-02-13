@@ -7,15 +7,16 @@ public class Gun : FollowEquipment
 {
 
     [SerializeField] Bullet bulletType;
-    [SerializeField] Transform bulletSpawn;
+    [SerializeField] Transform bulletSpawn; // offset location for spawning bullets
     [SerializeField] float fireRate = 1;    // Shots per second
     [SerializeField] float force = 100;
-    [SerializeField] float variance = 0;
+    [SerializeField] float variance = 0;    // TODO: Add random spread to bullets
     [SerializeField] int ammo;
     [SerializeField] int maxAmmo = 10;
     [SerializeField] int bulletCount = 1;
     [SerializeField] bool auto;
     [SerializeField] KeyCode fireKey;
+    [SerializeField] bool mouseFire;
     [SerializeField] AudioClip[] sounds;
     private float lastFireTime = -1;
     Audio source;
@@ -32,7 +33,8 @@ public class Gun : FollowEquipment
     protected virtual void Update()
     {
         SetPositionToTarget();
-        if (fireKey != default(KeyCode) && (Input.GetMouseButtonDown(0) || (auto && Input.GetMouseButton(0))))
+        if ((mouseFire && (Input.GetMouseButtonDown(0) || (auto && Input.GetMouseButton(0))))
+            || (fireKey != default && (Input.GetKeyDown(fireKey) || (auto && Input.GetKey(fireKey)))))
         {
             Fire();
         }
@@ -46,13 +48,13 @@ public class Gun : FollowEquipment
             ammo -= shots;
             for (var i = 0; i < shots; i++)
             {
-                var bullet = Instantiate<Bullet>(bulletType);
+                var bullet = Instantiate(bulletType);
                 bullet.Init(bulletSpawn);
                 bullet.Shoot(force);
                 OnFire(bullet);
             }
             lastFireTime = Time.realtimeSinceStartup;
-            source.Play(sounds);
+            if(source) source.Play(sounds);
         }
     }
 
@@ -66,8 +68,5 @@ public class Gun : FollowEquipment
         ammo = maxAmmo;
     }
 
-    private bool CanFire()
-    {
-        return ammo > 0 && (Time.realtimeSinceStartup - lastFireTime >= fireRate);
-    }
+    private bool CanFire() => ammo > 0 && (Time.realtimeSinceStartup - lastFireTime >= fireRate);
 }

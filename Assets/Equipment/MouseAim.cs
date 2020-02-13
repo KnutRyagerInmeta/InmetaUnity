@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class MouseAim : MonoBehaviour
 {
-    [SerializeField] Transform aimer; //main character
-    [SerializeField] float aimSpeed = 720; //Degress per second
+    [SerializeField] Transform aimer; // Aiming entity (usually main character)
+    [SerializeField] float aimSpeed = 720; // Degress per second
     [SerializeField] float minX = -30;
     [SerializeField] float maxX = 45;
     [SerializeField] bool useHorizonOnly = false;
@@ -22,8 +22,8 @@ public class MouseAim : MonoBehaviour
         //{ // only do anything when the button is pressed:
 
         var mosueWorldPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            Vector3 dir = Input.mousePosition - aimer.position;
-            float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
+        Vector3 dir = Input.mousePosition - aimer.position;
+        float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
         //aimer.rotation = Quaternion.AngleAxis(angle, Vector3.forward);
 
         var ray = Camera.main.ScreenPointToRay(Input.mousePosition);
@@ -40,7 +40,8 @@ public class MouseAim : MonoBehaviour
             //// accelerate it
             //projectile.rigidbody.velocity = projectile.transform.forward * 10;
             aimPoint = hit.point;
-        } else
+        }
+        else
         {
             aimPoint = mosueWorldPos + ray.direction.normalized * 1000;
         }
