@@ -30,6 +30,7 @@ public class GameObjectList : MonoBehaviour
     public Texture2D[] upgradeIcons;
     public Texture2D[] itemIcons;
     public Texture2D[] miscTextures;
+    public Texture2D[] textures;
     public Texture2D[] oreTextures;
     public Texture2D[] happinessIcons;
 
@@ -45,7 +46,7 @@ public class GameObjectList : MonoBehaviour
     {
         if (!created)
         {
-            DontDestroyOnLoad(transform.gameObject);    //TODO confirm if use
+            DontDestroyOnLoad(gameObject);    //TODO confirm if use
             ResourceManager.SetGameObjectList(this);
             //PlayerManager.Load();
             //RTS.PlayerManager.SetAvatarTextures (avatars);
@@ -53,7 +54,7 @@ public class GameObjectList : MonoBehaviour
         }
         else
         {
-            Destroy(this.gameObject);
+            Destroy(gameObject);
         }
     }
 
@@ -70,45 +71,23 @@ public class GameObjectList : MonoBehaviour
         return null;
     }
 
-    public AudioClip GetAudioClip(string name)
+    private T LookForInList<T>(string name, T[] list) where T : UnityEngine.Object
     {
-        int index = FoundInList(name, musicTracks);
+        int index = FoundInList(name, list);
         if (index >= 0)
-            return musicTracks[index];
+            return list[index];
         return null;
     }
 
-    public AudioClip GetSoundEffect(string name)
-    {
-        int index = FoundInList(name, soundEffects);
-        if (index >= 0)
-            return soundEffects[index];
-        index = FoundInList(name, selectSoundEffects);
-        if (index >= 0)
-            return selectSoundEffects[index];
-        return null;
-    }
+    public GameObject GetPlayer() => FindObjectOfType<Ball>()?.gameObject;
+    public GameObject GetProjectile(string name) => FindGameObjectInList<Projectile>(projectiles, name);
+    public AudioClip GetAudioClip(string name) => LookForInList(name, musicTracks);
+    public AudioClip GetSoundEffect(string name) => LookForInList(name, soundEffects);
+    public Texture GetTexture(string name) => LookForInList(name, textures);
+    public AudioClip[] GetSoundEffects(string name) => FindAllInList(name, soundEffects);
+    public int GetSoundEffectCount(string name) => CountInList(name, soundEffects);
 
-    public AudioClip[] GetSoundEffects(string name)
-    {
-        AudioClip[] found = FindAllInList(name, soundEffects);
-        if (found.Length == 0)
-            found = FindAllInList(name, selectSoundEffects);
-        return found;
-    }
-
-    public int GetSoundEffectCount(string name)
-    {
-        int count = CountInList(name, soundEffects);
-        if (count == 0)
-            count = CountInList(name, selectSoundEffects);
-        return count;
-    }
-
-    public GameObject GetWorldObject(string name)
-    {
-        return FindGameObjectInList<WorldObject>(worldObjects, name);
-    }
+    public GameObject GetWorldObject(string name) => FindGameObjectInList<WorldObject>(worldObjects, name);
 
     //public GameObject GetObject (string name)
     //{
@@ -207,10 +186,10 @@ public class GameObjectList : MonoBehaviour
     /// </summary>
     public Texture2D GetBuildImage(string name)
     {
-        Texture2D image = LookForTexture(name, unitIconsSmall);
+        Texture2D image = LookForInList(name, unitIconsSmall);
         if (image == null)
-            image = LookForTexture(name, buildingIconsSmall);
-        return image != null ? image : LookForTexture(name, groundStateIcons);
+            image = LookForInList(name, buildingIconsSmall);
+        return image != null ? image : LookForInList(name, groundStateIcons);
         //Debug.Log ("couldn't find damn '" + name + "'");
         /*for(int i=0; i<buildings.Length; i++) {
 			Building building = buildings[i].GetComponent<Building>();
@@ -222,63 +201,13 @@ public class GameObjectList : MonoBehaviour
 		}*/
     }
 
-    public Texture2D GetMiscTexture(string name)
-    {
-        return LookForTexture(name, miscTextures);
+    public Texture2D GetMiscTexture(string name) => LookForInList(name, miscTextures);
 
-    }
-
-    private Texture2D LookForTexture(string name, Texture2D[] list)
-    {
-        int index = FoundInList(name, list);
-        if (index >= 0)
-            return list[index];
-        return null;
-    }
-
-    public Texture2D GetAbilityImage(string name)
-    {
-        int index = FoundInList(name, abilityIcons);
-        if (index >= 0)
-            return abilityIcons[index];
-        return null;
-    }
-
-    public Texture2D GetUpgradeImage(string name)
-    {
-        int index = FoundInList(name, upgradeIcons);
-        if (index >= 0)
-            return upgradeIcons[index];
-        return null;
-    }
-
-    public Texture2D GetItemImage(string name)
-    {
-        int index = FoundInList(name, itemIcons);
-        if (index >= 0)
-            return itemIcons[index];
-        return null;
-    }
-
-    public Texture2D[] GetAvatars()
-    {
-        return avatars;
-    }
-
-    public Texture2D GetOreTexture(string name)
-    {
-        int index = FoundInList(name, oreTextures);
-        if (index >= 0)
-            return oreTextures[index];
-        return null;
-    }
-
-    public Texture2D GetHappinessIcon(string name)
-    {
-        int index = FoundInList(name, happinessIcons);
-        if (index >= 0)
-            return happinessIcons[index];
-        return null;
-    }
+    public Texture2D GetAbilityImage(string name) => LookForInList(name, abilityIcons);
+    public Texture2D GetUpgradeImage(string name) => LookForInList(name, upgradeIcons);
+    public Texture2D GetItemImage(string name) => LookForInList(name, itemIcons);
+    public Texture2D[] GetAvatars() => avatars;
+    public Texture2D GetOreTexture(string name) => LookForInList(name, oreTextures);
+    public Texture2D GetHappinessIcon(string name) => LookForInList(name, happinessIcons);
 
 }

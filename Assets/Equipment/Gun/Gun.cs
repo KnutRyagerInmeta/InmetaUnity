@@ -6,7 +6,7 @@ using UnityEngine;
 public class Gun : FollowEquipment
 {
 
-    [SerializeField] Bullet bulletType;
+    [SerializeField] Projectile bulletType;
     [SerializeField] Transform bulletSpawn; // offset location for spawning bullets
     [SerializeField] float fireRate = 1;    // Shots per second
     [SerializeField] float force = 100;
@@ -54,14 +54,11 @@ public class Gun : FollowEquipment
                 OnFire(bullet);
             }
             lastFireTime = Time.realtimeSinceStartup;
-            if(source) source.Play(sounds);
+            if (source) source.Play(sounds);
         }
     }
 
-    protected virtual void OnFire(Bullet bullet)
-    {
-
-    }
+    protected virtual void OnFire(Projectile bullet) { }
 
     public void Reload()
     {

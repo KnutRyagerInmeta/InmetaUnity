@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class C4 : Bullet {
+public class C4 : Projectile {
 
 
 	public void Explode()

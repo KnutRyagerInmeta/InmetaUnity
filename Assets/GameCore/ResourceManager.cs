@@ -127,24 +127,12 @@ public static class ResourceManager
 
 
 
-    public static AudioClip GetAudioClip(string name)
-    {
-        return gameObjectList.GetAudioClip(name);
-    }
-
-    public static AudioClip GetSoundEffect(string name)
-    {
-        return gameObjectList.GetSoundEffect(name);
-    }
-
-    public static AudioClip[] GetSoundEffects(string name)
-    {
-        return gameObjectList.GetSoundEffects(name);
-    }
-
-    public static int GetSoundEffectCount(string name)
-    {
-        return gameObjectList.GetSoundEffectCount(name);
-    }
+    public static GameObject GetPlayer() => gameObjectList.GetPlayer();
+    public static GameObject GetProjectile(string name) => gameObjectList.GetProjectile(name);
+    public static AudioClip GetAudioClip(string name) => gameObjectList.GetAudioClip(name);
+    public static AudioClip GetSoundEffect(string name) => gameObjectList.GetSoundEffect(name);
+    public static AudioClip[] GetSoundEffects(string name) => gameObjectList.GetSoundEffects(name);
+    public static int GetSoundEffectCount(string name) => gameObjectList.GetSoundEffectCount(name);
+    public static Texture GetTexture(string name) => gameObjectList.GetTexture(name);
 
 }

@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class C4Detonator : Gun {
 
-    [SerializeField] List<C4> c4s;
+    public List<C4> c4s;
 
 
 	// Use this for initialization
@@ -24,14 +24,11 @@ public class C4Detonator : Gun {
 
     public void Detonate()
     {
-        for(int i = 0; i < c4s.Count; i++)
-        {
-            c4s[i].Explode();
-        }
+        c4s.ForEach(c4 => c4.Explode());
         c4s.Clear();
     }
 
-    protected override void OnFire(Bullet c4)
+    protected override void OnFire(Projectile c4)
     {
         c4s.Add((C4)c4);
     }

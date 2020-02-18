@@ -32,25 +32,23 @@ public class Ball : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        var moveDirection = 0;
+        var moveDirection = 0f;
 
         if (Input.GetKey(KeyCode.A)) moveDirection -= 1; // Move left
         if (Input.GetKey(KeyCode.D)) moveDirection += 1; // Move right
+        if (Input.GetKey(KeyCode.S) && moveDirection == 0) moveDirection = -Mathf.Sign(body.velocity.x);    // brake
 
         if (moveDirection != 0)
         {
+            var useGroundAcceleration = TouchesGround() && !Input.GetKey(KeyCode.S);
             var horizontalDirection = Mathf.Sign(body.velocity.x);
-            var accelerationGroundOrAir = TouchesGround() ? -angularAcceleration : airAcceleration;
+            var accelerationGroundOrAir = useGroundAcceleration ? -angularAcceleration : airAcceleration;
             var accelerationWithDirection = moveDirection * accelerationGroundOrAir;
             var accelerationWithBraking = horizontalDirection == moveDirection ? accelerationWithDirection : accelerationWithDirection * brakeStrength;
-            if (TouchesGround()) body.AddTorque(new Vector3(0, 0, accelerationWithBraking), ForceMode.Acceleration);
-            else body.AddForce(Vector3.right * accelerationWithBraking, ForceMode.Acceleration);
-        }
-        // Brake only
-        if (Input.GetKey(KeyCode.S))
-        {
-            if (TouchesGround()) body.AddForce(Vector3.right * body.velocity.x * -(Mathf.Max(body.velocity.magnitude * Time.deltaTime, airAcceleration * brakeStrength)), ForceMode.VelocityChange);
-            else body.AddForce(Vector3.right * airAcceleration, ForceMode.Acceleration);
+            var brakeLimit = Mathf.Abs(accelerationWithBraking) < Mathf.Abs(body.velocity.x * Time.deltaTime) ? accelerationWithBraking : -body.velocity.x;
+            var accelerationWithBrakeLimit = Input.GetKey(KeyCode.S) ? brakeLimit : accelerationWithBraking;
+            if (useGroundAcceleration) body.AddTorque(new Vector3(0, 0, accelerationWithBrakeLimit), ForceMode.Acceleration);
+            else body.AddForce(Vector3.right * accelerationWithBrakeLimit, ForceMode.Acceleration);
         }
         // Jump
         jumpTimer += Time.deltaTime;
