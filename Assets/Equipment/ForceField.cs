@@ -1,18 +1,56 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class ForceField : MonoBehaviour
 {
-    // Start is called before the first frame update
+    [SerializeField] float energyDrainSpeed;
+    [SerializeField] PowerStorage powerSource;
+    [SerializeField] bool isActive = false;
+    [SerializeField] GameObject target;
+    [SerializeField] Health health;
+
     void Start()
     {
-        
+        health = target.gameObject.GetComponentInChildren<Health>();
+        powerSource = target.gameObject.GetComponentInChildren<PowerStorage>();
     }
 
-    // Update is called once per frame
     void Update()
     {
-        
+        if (isActive && energyDrainSpeed > 0 && (powerSource == null || !powerSource.Drain(energyDrainSpeed * Time.deltaTime)))
+        {
+            Deactivate();
+        }
+    }
+
+    public void Activate()
+    {
+        if (!isActive)
+        {
+            isActive = true;
+            health.invulnerable++;
+            gameObject.SetActive(true);
+        }
+    }
+
+    public void Deactivate()
+    {
+        if (isActive)
+        {
+            isActive = false;
+            health.invulnerable--;
+            gameObject.SetActive(false);
+        }
+    }
+
+    public void Toggle()
+    {
+        if (isActive)
+        {
+            Deactivate();
+        }
+        else
+        {
+            Activate();
+        }
     }
 }

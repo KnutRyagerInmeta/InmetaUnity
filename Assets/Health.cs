@@ -31,10 +31,7 @@ public class Health : MonoBehaviour
 
     public void TakeDamage(float damage)
     {
-        if (invulnerable > 0)
-        {
-            return;
-        }
+        if (invulnerable > 0) return;
         damage = Math.Max(0, (damage - linearArmor) * (1 - ratioArmor));
         Hp -= damage;
         if (Hp <= 0) Die();

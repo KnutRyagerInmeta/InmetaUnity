@@ -19,14 +19,11 @@ public class Parachute : FollowEquipment
     float lastActive;
 
 
-    // Use this for initialization
     void Start()
     {
         angle = Vector3.up;
-
     }
 
-    // Update is called once per frame
     void FixedUpdate()
     {
         Damp();
@@ -64,50 +61,10 @@ public class Parachute : FollowEquipment
         var resetZ = -resetSpeedNow * sin;
         bendX += resetX;
         bendZ += resetZ;
-        if (resetX > 0)
-        {
-            bendX = Mathf.Min(bendX, 0);
-        }
-        else if (resetX < 0)
-        {
-            bendX = Mathf.Max(bendX, 0);
-        }
-        if (resetZ > 0)
-        {
-            bendZ = Mathf.Min(bendZ, 0);
-        }
-        else if (resetZ < 0)
-        {
-            bendZ = Mathf.Max(bendZ, 0);
-        }
-    }
-
-    internal void ApplyForce(Vector3 force)
-    {
-        force = (Vector3.Project(force, angle)) * strength * targetBody.mass;
-        //Debug.Log("para force: " + force + ", angle: " + angle + ",vel: " + targetBody.velocity);
-        targetBody.AddForce(force);
-        transform.rotation = Quaternion.Euler(bendZ * 180 / Mathf.PI, 0, -bendX * 180 / Mathf.PI);
-    }
-
-    internal void Disable()
-    {
-        if (gameObject.activeInHierarchy)
-        {
-            Toggle();
-        }
-    }
-
-    internal void Toggle()
-    {
-        SetPositionToTarget();
-        gameObject.SetActive(!gameObject.activeInHierarchy);
-        if (gameObject.activeInHierarchy)
-        {
-            float deltaTime = Time.realtimeSinceStartup - lastActive;
-            setBend(deltaTime);
-        }
-        lastActive = Time.realtimeSinceStartup;
+        if (resetX > 0) bendX = Mathf.Min(bendX, 0);
+        else if (resetX < 0) bendX = Mathf.Max(bendX, 0);
+        if (resetZ > 0) bendZ = Mathf.Min(bendZ, 0);
+        else if (resetZ < 0) bendZ = Mathf.Max(bendZ, 0);
     }
 
     public void Bend(Vector3 move)
@@ -135,17 +92,40 @@ public class Parachute : FollowEquipment
         //Debug.Log("BEND:" + move + ", " + angleOf + ";___ " + angle + ", " + xComponent + "," + zComponent + ", " + bendX + ":" + bendZ);
     }
 
+    internal void ApplyForce(Vector3 force)
+    {
+        force = (Vector3.Project(force, angle)) * strength * targetBody.mass;
+        //Debug.Log("para force: " + force + ", angle: " + angle + ",vel: " + targetBody.velocity);
+        targetBody.AddForce(force);
+        transform.rotation = Quaternion.Euler(bendZ * 180 / Mathf.PI, 0, -bendX * 180 / Mathf.PI);
+    }
+
+    public void Disable()
+    {
+        if (gameObject.activeInHierarchy) Toggle();
+    }
+
+    public void Toggle()
+    {
+        SetPositionToTarget();
+        gameObject.SetActive(!gameObject.activeInHierarchy);
+        if (gameObject.activeInHierarchy)
+        {
+            float deltaTime = Time.realtimeSinceStartup - lastActive;
+            setBend(deltaTime);
+        }
+        lastActive = Time.realtimeSinceStartup;
+    }
+
+    void OnCollisionEnter(Collision collision)
+    {
+        Disable();
+    }
+
     public void Reset()
     {
         bendX = 0;
         bendZ = 0;
         transform.rotation = Quaternion.Euler(bendX, 0, bendZ);
-    }
-
-
-
-    void OnCollisionEnter(Collision collision)
-    {
-        Disable();
     }
 }

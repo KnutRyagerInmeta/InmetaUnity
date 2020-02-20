@@ -36,7 +36,7 @@ public class Ball : MonoBehaviour
 
         if (Input.GetKey(KeyCode.A)) moveDirection -= 1; // Move left
         if (Input.GetKey(KeyCode.D)) moveDirection += 1; // Move right
-        if (Input.GetKey(KeyCode.S) && moveDirection == 0) moveDirection = -Mathf.Sign(body.velocity.x);    // brake
+        if (Input.GetKey(KeyCode.S) && moveDirection == 0) moveDirection = -Mathf.Sign(body.velocity.x); // brake
 
         if (moveDirection != 0)
         {

@@ -259,6 +259,8 @@ GameObject:
   - component: {fileID: 123139242}
   - component: {fileID: 123139245}
   - component: {fileID: 123139243}
+  - component: {fileID: 123139244}
+  - component: {fileID: 123139246}
   m_Layer: 0
   m_Name: Ball
   m_TagString: Untagged
@@ -297,7 +299,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: a67e733721124c74fab9429c5f5c348b, type: 2}
+  - {fileID: 2100000, guid: 6f509c05c93d7184fab4cf3a050a65bb, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -375,6 +377,21 @@ MonoBehaviour:
   healthBar: {fileID: 0}
   RegenerationSpeed: 0
   DeathMode: 0
+--- !u!114 &123139244
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 123139237}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8fd72f2c2423f3146a8b20ed4c215612, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  equipments:
+  - {fileID: 0}
+  - {fileID: 0}
 --- !u!114 &123139245
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -392,6 +409,21 @@ MonoBehaviour:
   angularAcceleration: 100
   jumpSpeed: 8
   bouncity: 0.5
+--- !u!114 &123139246
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 123139237}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2a8541254aa1adb4d8a93eacb4193576, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  energyBar: {fileID: 0}
+  energy: 0
+  maxEnergy: 0
 --- !u!1 &207488810
 GameObject:
   m_ObjectHideFlags: 0
